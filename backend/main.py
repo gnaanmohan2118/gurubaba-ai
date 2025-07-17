@@ -4,7 +4,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 import os
 
-from backend.openrouter_client import get_openrouter_response
+from openrouter_client import get_openrouter_response
 
 # Template and static file directories
 TEMPLATES_DIR = os.path.join(os.path.dirname(__file__), "templates")
