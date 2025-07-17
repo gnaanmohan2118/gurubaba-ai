@@ -1,0 +1,85 @@
+from fastapi import FastAPI, Request
+from fastapi.responses import HTMLResponse, JSONResponse
+from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
+import httpx
+import os
+from dotenv import load_dotenv
+
+# Load environment variables from .env
+load_dotenv()
+
+# API Key
+OPENROUTER_KEY = os.getenv("OPENROUTER_API_KEY")
+
+# Base Directories
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+TEMPLATES_DIR = os.path.join(BASE_DIR, "../frontend")
+STATIC_DIR = os.path.join(BASE_DIR, "../frontend")
+
+# FastAPI App
+app = FastAPI()
+print("✅ FastAPI app started.")
+
+# Mount static files and templates
+app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
+templates = Jinja2Templates(directory=TEMPLATES_DIR)
+
+# Route: GET /
+@app.get("/", response_class=HTMLResponse)
+async def get_chat(request: Request):
+    return templates.TemplateResponse("index.html", {"request": request})
+
+# Route: POST /chat
+@app.post("/chat")
+async def chat_with_gurubaba(request: Request):
+    try:
+        data = await request.json()
+        user_message = data.get("message")
+
+        if not user_message:
+            return JSONResponse(status_code=400, content={"error": "No message provided"})
+
+        headers = {
+            "Authorization": f"Bearer {OPENROUTER_KEY}",
+            "Content-Type": "application/json"
+        }
+
+        payload = {
+            "model": "meta-llama/llama-3.3-70b-instruct:free",
+            "messages": [
+                {
+                    "role": "system",
+                    "content": "You are Gurubaba AI, a wise spiritual guide speaking in poetic Hindi-English."
+                },
+                {
+                    "role": "user",
+                    "content": user_message
+                }
+            ]
+        }
+
+        async with httpx.AsyncClient() as client:
+            response = await client.post(
+                "https://openrouter.ai/api/v1/chat/completions",
+                headers=headers,
+                json=payload
+            )
+
+        if response.status_code == 200:
+            res_json = response.json()
+            reply = res_json["choices"][0]["message"]["content"]
+            return JSONResponse(content={"reply": reply})
+        else:
+            return JSONResponse(status_code=response.status_code, content={
+                "error": "Model request failed",
+                "details": response.text
+            })
+
+    except Exception as e:
+        return JSONResponse(status_code=500, content={"error": str(e)})
+
+# Run with: uvicorn backend.main:app --reload
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run("backend.main:app", host="127.0.0.1", port=8000, reload=True)
