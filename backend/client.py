@@ -8,7 +8,7 @@ async def get_client_response(prompt: str):
     }
 
     payload = {
-        "model": "llama-3.3-70b-versatile",
+        "model": "meta-llama/llama-3-8b-instruct",
         "messages": [
             {
                 "role": "system",
