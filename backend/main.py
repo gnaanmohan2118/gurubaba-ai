@@ -4,7 +4,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 import os
 
-from openrouter_client import get_openrouter_response
+from client import get_client_response
 
 # Template and static file directories
 TEMPLATES_DIR = os.path.join(os.path.dirname(__file__), "templates")
@@ -39,7 +39,7 @@ async def chat_with_gurubaba(request: Request):
         if not user_message:
             return JSONResponse(status_code=400, content={"error": "No message provided"})
 
-        reply = await get_openrouter_response(user_message)
+        reply = await get_client_response(user_message)
         return JSONResponse(content={"reply": reply})
 
     except Exception as e:
