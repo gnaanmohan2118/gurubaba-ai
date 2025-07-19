@@ -1,16 +1,14 @@
 import httpx
-from config import OPENROUTER_API_KEY, OPENROUTER_API_BASE
+from config import GROQ_API_KEY, GROQ_API_BASE
 
-async def get_openrouter_response(prompt: str):
+async def get_client_response(prompt: str):
     headers = {
-        "Authorization": f"Bearer {OPENROUTER_API_KEY}",
+        "Authorization": f"Bearer {GROQ_API_KEY}",
         "Content-Type": "application/json",
-        "HTTP-Referer": "http://localhost:8000",   # REQUIRED for free-tier
-        "X-Title": "Gurubaba AI"
     }
 
     payload = {
-        "model": "meta-llama/llama-3.3-70b-instruct:free",
+        "model": "llama-3.3-70b-versatile",
         "messages": [
             {
                 "role": "system",
@@ -34,7 +32,7 @@ async def get_openrouter_response(prompt: str):
 
     try:
         async with httpx.AsyncClient() as client:
-            response = await client.post(OPENROUTER_API_BASE, headers=headers, json=payload)
+            response = await client.post(GROQ_API_BASE, headers=headers, json=payload)
             response.raise_for_status()
             data = response.json()
             return data["choices"][0]["message"]["content"]
@@ -47,11 +45,11 @@ async def get_openrouter_response(prompt: str):
             print("[ERROR] 401 Unauthorized: Check your API key.")
             return "🔐 Gurubaba needs a valid API key. Please check your connection to the higher powers."
         else:
-            print(f"[ERROR] HTTP error from OpenRouter: {e}")
+            print(f"[ERROR] HTTP error from Client: {e}")
             return f"🚨 Gurubaba faced an unexpected issue: {e.response.status_code}."
 
     except httpx.RequestError as e:
-        print(f"[ERROR] Network error while contacting OpenRouter: {e}")
+        print(f"[ERROR] Network error while contacting Client: {e}")
         return "📡 Gurubaba cannot connect to the cloud right now. Please check your connection."
 
     except Exception as e:
