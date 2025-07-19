@@ -31,6 +31,11 @@ async def get_client_response(prompt: str):
     }
 
     try:
+        try:
+        # 🟡 DEBUG: Print API base and key prefix
+        print(f"🔧 API BASE: {GROQ_API_BASE}")
+        print(f"🔑 API KEY: {GROQ_API_KEY[:5]}...")
+        
         async with httpx.AsyncClient() as client:
             response = await client.post(GROQ_API_BASE, headers=headers, json=payload)
             response.raise_for_status()
