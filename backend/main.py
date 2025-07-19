@@ -7,6 +7,10 @@ import logging
 
 from client import get_client_response
 
+#log setup
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
 # Template and static file directories
 TEMPLATES_DIR = os.path.join(os.path.dirname(__file__), "templates")
 STATIC_DIR = os.path.join(os.path.dirname(__file__), "static")
