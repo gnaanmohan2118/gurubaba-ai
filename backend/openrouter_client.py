@@ -5,12 +5,10 @@ async def get_openrouter_response(prompt: str):
     headers = {
         "Authorization": f"Bearer {PERPLEXITY_API_KEY}",
         "Content-Type": "application/json",
-        "HTTP-Referer": "http://localhost:8000",   # REQUIRED for free-tier
-        "X-Title": "Gurubaba AI"
     }
 
     payload = {
-        "model": "meta-llama/llama-3.3-70b-instruct:free",
+        "model": "meta-llama/llama-3-70b-instruct",
         "messages": [
             {
                 "role": "system",
@@ -27,7 +25,7 @@ async def get_openrouter_response(prompt: str):
             },
             {
                 "role": "user",
-                "content": prompt
+                "content": "What's the Purpose of life?"
             }
         ]
     }
