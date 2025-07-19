@@ -1,5 +1,5 @@
 import httpx
-from config import OPENROUTER_API_KEY, OPENROUTER_API_BASE
+from config import PERPLEXITY_API_KEY, PERPLEXITY_API_BASE
 
 async def get_openrouter_response(prompt: str):
     headers = {
