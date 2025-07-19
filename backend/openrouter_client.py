@@ -3,7 +3,7 @@ from config import PERPLEXITY_API_KEY, PERPLEXITY_API_BASE
 
 async def get_openrouter_response(prompt: str):
     headers = {
-        "Authorization": f"Bearer {OPENROUTER_API_KEY}",
+        "Authorization": f"Bearer {PERPLEXITY_API_KEY}",
         "Content-Type": "application/json",
         "HTTP-Referer": "http://localhost:8000",   # REQUIRED for free-tier
         "X-Title": "Gurubaba AI"
