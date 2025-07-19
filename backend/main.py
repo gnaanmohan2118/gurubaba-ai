@@ -3,6 +3,7 @@ from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 import os
+import logging
 
 from client import get_client_response
 
@@ -39,6 +40,9 @@ async def chat_with_gurubaba(request: Request):
         if not user_message:
             return JSONResponse(status_code=400, content={"error": "No message provided"})
 
+        logger.info(f"📝 User prompt: {user_message}") 
+
+        
         reply = await get_client_response(user_message)
         return JSONResponse(content={"reply": reply})
 
