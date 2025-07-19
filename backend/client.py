@@ -1,5 +1,5 @@
 import httpx
-from config import GROQ_API_KEY, GROQ_API_BASE
+from backend.config import GROQ_API_KEY, GROQ_API_BASE
 
 async def get_client_response(prompt: str):
     headers = {
@@ -8,7 +8,7 @@ async def get_client_response(prompt: str):
     }
 
     payload = {
-        "model": "meta-llama/llama-3-8b-instruct",
+        "model": "llama-3.3-70b-versatile",
         "messages": [
             {
                 "role": "system",
@@ -31,11 +31,6 @@ async def get_client_response(prompt: str):
     }
 
     try:
-        try:
-            # 🟡 DEBUG: Print API base and key prefix
-            print(f"🔧 API BASE: {GROQ_API_BASE}")
-            print(f"🔑 API KEY: {GROQ_API_KEY[:5]}...")
-        
         async with httpx.AsyncClient() as client:
             response = await client.post(GROQ_API_BASE, headers=headers, json=payload)
             response.raise_for_status()
