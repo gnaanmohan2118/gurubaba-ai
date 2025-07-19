@@ -3,5 +3,5 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-PERPLEXITY_API_KEY= os.getenv("PERPLEXITY_API_KEY")
-PERPLEXITY_API_BASE = os.getenv("PERPLEXITY_API_BASE", "https://api.perplexity.ai/chat/completions")
+GROQ_API_KEY= os.getenv("GROQ_API_KEY")
+GROQ_API_BASE = os.getenv("GROQ_API_BASE", "https://api.perplexity.ai/chat/completions")
