@@ -34,7 +34,7 @@ async def get_openrouter_response(prompt: str):
 
     try:
         async with httpx.AsyncClient() as client:
-            response = await client.post(OPENROUTER_API_BASE, headers=headers, json=payload)
+            response = await client.post(PERPLEXITY_API_BASE, headers=headers, json=payload)
             response.raise_for_status()
             data = response.json()
             return data["choices"][0]["message"]["content"]
