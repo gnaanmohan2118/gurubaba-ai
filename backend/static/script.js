@@ -50,7 +50,7 @@ function appendMessage(sender, text) {
 
 // On first load
 window.addEventListener("DOMContentLoaded", () => {
-  appendMessage("bot", "🧘 Welcome to Gurubaba's wisdom chat! Ask your questions and receive guidance.");
+  appendMessage("bot", ""Speak, wisdom shall come."");
   messageInput.focus();
 });
 
