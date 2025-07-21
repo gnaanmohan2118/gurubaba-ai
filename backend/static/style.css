@@ -19,14 +19,13 @@ header {
   top: 0;
   z-index: 100;
   border: none;
-  background: none;              /* No background */
-  box-shadow: none;              /* No shadow */
-  backdrop-filter: none;         /* No blur */
-  font-family: 'Cinzel', serif;  /* Clean serif font */
-  color: #fff;                   /* White text */
+  background: none;
+  box-shadow: none;
+  backdrop-filter: none;
+  font-family: 'Cinzel', serif;
+  color: #fff;
   letter-spacing: 1px;
 }
-
 
 /* 💬 Chat Area */
 main {
@@ -38,14 +37,14 @@ main {
   padding: 0 1rem;
   min-height: 100vh;
 }
+
 #chat-container {
   width: 100%;
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  padding-bottom: 14rem;  /* Extra space so footer is reachable */
+  padding-bottom: 14rem;
 }
-
 
 /* 🗯️ Message Bubbles */
 .message {
@@ -75,7 +74,7 @@ main {
 
 @keyframes fadeInUp {
   from { opacity: 0; transform: translateY(10px); }
-  to   { opacity: 1; transform: translateY(0); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 /* 📥 Prompt Input Form */
@@ -94,7 +93,6 @@ form#chat-form {
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
   z-index: 100;
 }
-
 
 textarea {
   flex: 1;
@@ -128,35 +126,41 @@ button:hover {
 #contact-section {
   margin-top: 8rem;
   padding: 4rem 2rem;
-  text-align: center;
   background: rgba(0, 0, 0, 0.4);
   backdrop-filter: blur(5px);
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
+  text-align: center;
   gap: 3rem;
 }
 
 #contact-section h2 {
   font-size: 2rem;
   margin-bottom: 2rem;
+  color: white;
 }
 
 /* 🧾 Contact Cards Grid */
 .contact-cards {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
   gap: 2rem;
   width: 100%;
   max-width: 1000px;
 }
 
+/* Individual Contact Card */
 .contact-card {
   background: rgba(255, 255, 255, 0.1);
   padding: 1.5rem;
   border-radius: 20px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
-  text-align: left;
+  text-align: center;
+  width: 280px;
   transition: transform 0.2s ease;
 }
 
@@ -237,14 +241,14 @@ button:hover {
 /* 📱 Mobile Responsive Adjustments */
 @media screen and (max-width: 600px) {
   .contact-cards {
-    grid-template-columns: 1fr;
+    flex-direction: column;
+    align-items: center;
   }
 
   #contact-section h2 {
     font-size: 1.5rem;
   }
 }
-
 
 /* 🔚 Footer */
 footer#footer-section {
