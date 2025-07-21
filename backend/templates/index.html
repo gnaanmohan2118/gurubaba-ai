@@ -3,18 +3,76 @@
 <head>
   <meta charset="UTF-8" />
   <title>🧘Gurubaba AI</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600&display=swap" rel="stylesheet">
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="/static/style.css" />
 </head>
 <body>
-  <header> Gurubaba AI</header>
+  <!-- 🧘 Header -->
+  <header>Gurubaba AI</header>
 
-  <div id="chat-container"></div>
+  <!-- 💬 Chat + Prompt -->
+  <main>
+    <div id="chat-container"></div>
 
-  <form id="chat-form">
-    <textarea id="message" rows="2" placeholder="Ask your question..." autofocus></textarea>
-    <button type="submit">⬆️</button>
-  </form>
+    <form id="chat-form">
+      <textarea id="message" rows="2" placeholder="Ask your question..." autofocus></textarea>
+      <button type="submit">⬆️</button>
+    </form>
+  </main>
+
+ <!-- 📞 Contact Section -->
+<section class="contact-section" id="contact">
+  <div class="container">
+    <h2 class="section-title">CONTACT</h2>
+    <div class="contact-grid">
+      <div class="contact-card glass">
+        <i class="fas fa-map-marked-alt icon"></i>
+        <h3>Address</h3>
+        <p>Chennai/Bengaluru, India</p>
+      </div>
+
+      <div class="contact-card glass">
+        <i class="fas fa-share-alt icon"></i>
+        <h3>Social Profiles</h3>
+        <div class="social-links">
+          <a href="https://www.linkedin.com/in/gnana-ganesh-m/" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+          <a href="https://github.com/gnaanmohan2118" target="_blank"><i class="fab fa-github"></i></a>
+          <a href="https://twitter.com/53agati" target="_blank"><i class="fab fa-twitter"></i></a>
+        </div>
+      </div>
+
+      <div class="contact-card glass">
+        <i class="fas fa-envelope icon"></i>
+        <h3>Email</h3>
+        <p>gnanaganeshgm@gmail.com</p>
+      </div>
+
+      <div class="contact-card glass">
+        <i class="fas fa-phone-alt icon"></i>
+        <h3>Call</h3>
+        <p>+91-8190976506</p>
+      </div>
+    </div>
+
+    <form class="contact-form glass" action="https://formspree.io/f/xjkovypw" method="POST">
+      <div class="form-row">
+        <input type="text" name="name" placeholder="Your Name" required />
+        <input type="email" name="email" placeholder="Your E-Mail" required />
+      </div>
+      <input type="text" name="subject" placeholder="Subject" required />
+      <textarea name="message" rows="5" placeholder="Enter Your Message" required></textarea>
+      <button type="submit">Send Message</button>
+    </form>
+  </div>
+</section>
+
+
+
+  <!-- 🔚 Footer -->
+  <footer id="footer-section">
+    &copy; 2025 Gurubaba AI. All rights reserved.
+  </footer>
 
   <script src="/static/script.js"></script>
 </body>
