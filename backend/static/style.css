@@ -250,6 +250,23 @@ button:hover {
   }
 }
 
+.social-links {
+  margin-top: 0.5rem;
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.social-links a {
+  color: #ccc;
+  font-size: 1.2rem;
+  transition: color 0.3s;
+}
+
+.social-links a:hover {
+  color: #fff;
+}
+
 /* 🔚 Footer */
 footer#footer-section {
   padding: 1rem;
