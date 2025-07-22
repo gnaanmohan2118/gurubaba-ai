@@ -16,16 +16,8 @@ async def get_client_response(prompt: str):
             },
             {
                 "role": "user",
-                "content": "What is a vector database?"
+                "content": prompt
             },
-            {
-                "role": "assistant",
-                "content": "A vector database stores data as high-dimensional vectors..."
-            },
-            {
-                "role": "user",
-                "content": "Can you compare it with a normal database?"
-            }
         ]
     }
 
