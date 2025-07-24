@@ -37,20 +37,26 @@ async def health_check():
 @app.post("/chat")
 async def chat_with_gurubaba(request: Request):
     print("[INFO] POST /chat called")
+
     try:
         data = await request.json()
         user_message = data.get("message")
+        print(f"[INFO] Received message: {user_message}")
 
         if not user_message:
+            print("[WARN] No message provided in request.")
             return JSONResponse(status_code=400, content={"error": "No message provided"})
 
-        logger.info(f"📝 User prompt: {user_message}") 
-
-        
+        # 👇 Print before and after the Groq call
+        print("[INFO] Sending message to Groq...")
         reply = await get_client_response(user_message)
+        print(f"[INFO] Received reply from Groq: {reply}")
+
+        print("[INFO] Sending message to client...")
         return JSONResponse(content={"reply": reply})
 
     except Exception as e:
+        print(f"[ERROR] Exception occurred: {e}")
         return JSONResponse(status_code=500, content={"error": str(e)})
 
 # For local dev (optional)
