@@ -32,7 +32,7 @@ form.addEventListener("submit", async function (e) {
 
     const data = await response.json();
 
-    loadingBot.textContent = "🧘 Gurubaba says: " + (data.reply || "🙏 Baba is silent...");
+    loadingBot.textContent = (data.reply || "🙏 Baba is silent...");
   } catch (error) {
     loadingBot.textContent = "⚠️ Gurubaba error: " + error.message;
   }
