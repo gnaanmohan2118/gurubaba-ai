@@ -1,7 +1,7 @@
 import httpx
 import asyncio
 import json
-from backend.config import GROQ_API_KEY, GROQ_API_BASE
+from config import GROQ_API_KEY, GROQ_API_BASE
 
 async def get_client_response(prompt: str):
     headers = {
