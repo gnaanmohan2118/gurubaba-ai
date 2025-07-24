@@ -25,7 +25,7 @@ async def get_client_response(prompt: str):
         async with httpx.AsyncClient() as client:
             response = await client.post(GROQ_API_BASE, headers=headers, json=payload)
             response.raise_for_status()
-            data = response.json()
+            data = await response.json()
             return data["choices"][0]["message"]["content"]
 
     except httpx.HTTPStatusError as e:
