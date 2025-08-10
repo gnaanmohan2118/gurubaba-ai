@@ -1,13 +1,30 @@
 import httpx
-import asyncio
 import json
-from config import GROQ_API_KEY, GROQ_API_BASE
+from backend.config import GROQ_API_KEY, GROQ_API_BASE
 
-async def get_client_response(prompt: str):
+SYSTEM_PROMPT = {
+    "role": "system",
+    "content": (
+        "You are a concise, technically grounded assistant like ChatGPT. "
+        "Respond with clear, structured, and actionable answers, using step-by-step explanations when helpful. "
+        "Adapt to the user's level—beginner, intermediate, or expert. Avoid self-references. "
+        "You may occasionally use light humor or spiritual tone when appropriate. "
+        "For complex replies, end with a one-line Short Wisdom TLDR that summarizes the key insight or best practice."
+    )
+}
+
+async def get_client_response(history: list):
+    """
+    history: list of dicts [{"role": "user"/"assistant", "content": "..."}]
+    Returns the assistant's reply as a string.
+    """
     headers = {
         "Authorization": f"Bearer {GROQ_API_KEY}",
         "Content-Type": "application/json",
     }
+
+    # Ensure system prompt is always first
+    messages = [SYSTEM_PROMPT] + history
 
     payload = {
         "model": "meta-llama/llama-4-scout-17b-16e-instruct",
@@ -16,16 +33,7 @@ async def get_client_response(prompt: str):
         "top_p": 1,
         "stream": True,
         "stop": None,
-        "messages": [
-            {
-                "role": "system",
-                "content": "You are a concise, technically grounded assistant like ChatGPT. Respond with clear, structured, and actionable answers, using step-by-step explanations when helpful. Adapt to the user's level—beginner, intermediate, or expert. Avoid self-references. You may occasionally use light humor or spiritual tone when appropriate. For complex replies, end with a one-line Short Wisdom TLDR that summarizes the key insight or best practice."
-            },
-            {
-                "role": "user",
-                "content": prompt
-            }
-        ]
+        "messages": messages
     }
 
     full_reply = ""
@@ -43,28 +51,23 @@ async def get_client_response(prompt: str):
                         try:
                             data = json.loads(data_str)
                             delta = data["choices"][0]["delta"].get("content", "")
-                            print(delta, end="", flush=True)  # live print
+                            print(delta, end="", flush=True)  # Live print for dev
                             full_reply += delta
                         except Exception as e:
                             print(f"\n[ERROR] Failed to parse stream chunk: {e}")
 
-        return full_reply
+        return full_reply.strip()
 
     except httpx.HTTPStatusError as e:
         if e.response.status_code == 429:
-            print("[WARN] 429 Too Many Requests: Rate limit exceeded.")
-            return "🌐 Gurubaba is meditating now. Too many questions at once. Please try again in a while. 🙏"
+            return "🌐 Gurubaba is meditating now. Too many questions at once. Please try again later. 🙏"
         elif e.response.status_code == 401:
-            print("[ERROR] 401 Unauthorized: Check your API key.")
             return "🔐 Gurubaba needs a valid API key. Please check your connection to the higher powers."
         else:
-            print(f"[ERROR] HTTP error from Client: {e}")
             return f"🚨 Gurubaba faced an unexpected issue: {e.response.status_code}."
 
-    except httpx.RequestError as e:
-        print(f"[ERROR] Network error while contacting Client: {e}")
+    except httpx.RequestError:
         return "📡 Gurubaba cannot connect to the cloud right now. Please check your connection."
 
-    except Exception as e:
-        print(f"[ERROR] Unexpected error: {e}")
+    except Exception:
         return "⚠️ Something went wrong while invoking Gurubaba. Please try again."
