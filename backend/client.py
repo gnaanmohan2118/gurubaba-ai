@@ -1,6 +1,6 @@
 import httpx
 import json
-from backend.config import GROQ_API_KEY, GROQ_API_BASE
+from config import GROQ_API_KEY, GROQ_API_BASE
 
 SYSTEM_PROMPT = {
     "role": "system",
