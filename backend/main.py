@@ -7,8 +7,8 @@ import uuid
 import json
 import redis.asyncio as aioredis  # Async Redis client
 
-from backend.client import get_client_response
-from backend.config import REDIS_URL
+from client import get_client_response
+from config import REDIS_URL
 
 # Setup paths
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
