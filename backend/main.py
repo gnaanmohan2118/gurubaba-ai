@@ -6,9 +6,14 @@ from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 import redis.asyncio as aioredis  # Async Redis client
+import sys
+
+
+print(f"REDIS_URL from env: {os.getenv('REDIS_URL')}", file=sys.stderr)
+
 
 from client import get_client_response
-from config import REDIS_URL
+from config import REDIS_URL, SESSION_TTL_SECONDS
 
 # Setup paths
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
