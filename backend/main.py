@@ -3,63 +3,79 @@ from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 import os
-import logging
+import uuid
+import json
+import redis.asyncio as aioredis  # Async Redis client
 
-from client import get_client_response
+from backend.client import get_client_response
+from backend.config import REDIS_URL
 
-#log setup
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
-
-# Template and static file directories
+# Setup paths
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 TEMPLATES_DIR = os.path.join(os.path.dirname(__file__), "templates")
 STATIC_DIR = os.path.join(os.path.dirname(__file__), "static")
 
 app = FastAPI()
 
-# Mount static files (if you have any static/css/js)
-app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
+# Redis connection
+redis = aioredis.from_url(REDIS_URL, decode_responses=True)
 
-# Jinja2 for HTML rendering
+# Serve static and HTML
+app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 templates = Jinja2Templates(directory=TEMPLATES_DIR)
 
-# Root route - serve index.html
 @app.get("/", response_class=HTMLResponse)
 async def get_chat(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
 
-# Health check
 @app.get("/health")
 async def health_check():
     return {"status": "ok", "message": "Gurubaba server is running 🙏"}
 
-# Chat endpoint
+@app.get("/session/{session_id}")
+async def get_session_history(session_id: str):
+    """Fetch stored conversation for a session."""
+    history_json = await redis.get(f"session:{session_id}")
+    if not history_json:
+        return {"session_id": session_id, "history": []}
+    return {"session_id": session_id, "history": json.loads(history_json)}
+
 @app.post("/chat")
 async def chat_with_gurubaba(request: Request):
-    print("[INFO] POST /chat called")
-
     try:
         data = await request.json()
         user_message = data.get("message")
-        print(f"[INFO] Received message: {user_message}")
+        session_id = data.get("session_id") or str(uuid.uuid4())
 
         if not user_message:
-            print("[WARN] No message provided in request.")
             return JSONResponse(status_code=400, content={"error": "No message provided"})
 
-        # 👇 Print before and after the Groq call
-        print("[INFO] Sending message to Groq...")
-        reply = await get_client_response(user_message)
-        print(f"[INFO] Received reply from Groq: {reply}")
+        # Load history from Redis
+        history_key = f"session:{session_id}"
+        history_json = await redis.get(history_key)
+        history = json.loads(history_json) if history_json else []
 
-        print("[INFO] Sending message to client...")
-        return JSONResponse(content={"reply": reply})
+        # Append user message
+        history.append({"role": "user", "content": user_message})
+
+        # Send full history to LLM
+        reply = await get_client_response(history)
+
+        # Append bot reply to history
+        history.append({"role": "assistant", "content": reply})
+
+        # Save updated history
+        await redis.set(history_key, json.dumps(history), ex=86400)  # TTL = 1 day
+
+        return JSONResponse(content={
+            "session_id": session_id,
+            "reply": reply
+        })
 
     except Exception as e:
-        print(f"[ERROR] Exception occurred: {e}")
         return JSONResponse(status_code=500, content={"error": str(e)})
 
-# For local dev (optional)
+# Optional: run directly
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run("backend.main:app", host="127.0.0.1", port=8000, reload=True)
