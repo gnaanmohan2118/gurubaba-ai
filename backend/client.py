@@ -1,19 +1,39 @@
 import httpx
 import json
-from config import GROQ_API_KEY, GROQ_API_BASE
+import re
+from backend.config import GROQ_API_KEY, GROQ_API_BASE
 
 SYSTEM_PROMPT = {
     "role": "system",
     "content": (
-        "You are a concise, technically grounded assistant like ChatGPT. "
-        "Respond with clear, structured, and actionable answers, using step-by-step explanations when helpful. "
-        "Adapt to the user's level—beginner, intermediate, or expert. Avoid self-references. "
-        "You may occasionally use light humor or spiritual tone when appropriate. "
-        "For complex replies, end with a one-line Short Wisdom TLDR that summarizes the key insight or best practice."
+        "You are Gurubaba, a wise but approachable AI mentor. "
+        "Speak in a natural, conversational way, as if talking directly to the user. "
+        "Do not use Markdown formatting—no hashes (#), no asterisks (*), "
+        "no bullet symbols, and no triple backticks. "
+        "Keep everything in clean plain text. "
+        "If you need to show steps or code, present them clearly in plain text without extra symbols. "
+        "Your style should be concise, empathetic, and human-like, with a touch of wisdom or light humor when appropriate. "
+        "For longer or complex answers, always finish with one short closing line starting with '✨ Wisdom TLDR:' "
+        "that gives the key takeaway."
     )
 }
 
+def clean_reply(text: str) -> str:
+    # Remove markdown-like symbols
+    text = re.sub(r"[#*`]+", "", text)
+    # Collapse extra newlines
+    text = re.sub(r"\n{3,}", "\n\n", text)
+    return text.strip()
+
 async def get_client_response(history: list):
+    """
+    history: list of dicts [{"role": "user"/"assistant", "content": "..."}]
+    Returns the assistant's reply as a string.
+    """
+    # Log user input in terminal
+    if history and history[-1]["role"] == "user":
+        print(f"\n[USER] {history[-1]['content']}\n")
+
     """
     history: list of dicts [{"role": "user"/"assistant", "content": "..."}]
     Returns the assistant's reply as a string.
@@ -56,7 +76,7 @@ async def get_client_response(history: list):
                         except Exception as e:
                             print(f"\n[ERROR] Failed to parse stream chunk: {e}")
 
-        return full_reply.strip()
+        return clean_reply(full_reply)
 
     except httpx.HTTPStatusError as e:
         if e.response.status_code == 429:
@@ -69,5 +89,5 @@ async def get_client_response(history: list):
     except httpx.RequestError:
         return "📡 Gurubaba cannot connect to the cloud right now. Please check your connection."
 
-    except Exception:
-        return "⚠️ Something went wrong while invoking Gurubaba. Please try again."
+    except Exception as e:
+        return f"⚠️ Something went wrong while invoking Gurubaba: {e}"
