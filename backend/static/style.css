@@ -8,6 +8,8 @@ html, body {
   background-size: cover;
   color: white;
   min-height: 100vh;
+  -webkit-background-size: cover; /* iOS fix */
+  -webkit-overflow-scrolling: touch;
 }
 
 /* 🧘 Sticky Header */
@@ -35,7 +37,7 @@ main {
   max-width: 800px;
   margin: 3rem auto 8rem;
   padding: 0 1rem;
-  min-height: 100vh;
+  min-height: calc(100vh - 3rem);
 }
 
 #chat-container {
@@ -81,7 +83,7 @@ main {
 form#chat-form {
   position: sticky;
   bottom: 0;
-  margin: 10rem auto 0;
+  margin: 0 auto;
   padding: 1rem;
   display: flex;
   gap: 10px;
@@ -240,6 +242,18 @@ button:hover {
 
 /* 📱 Mobile Responsive Adjustments */
 @media screen and (max-width: 600px) {
+  main {
+    margin: 2rem 1rem 6rem;
+  }
+
+  form#chat-form {
+    width: 95%;
+  }
+
+  #chat-container {
+    padding-bottom: 12rem;
+  }
+
   .contact-cards {
     flex-direction: column;
     align-items: center;
