@@ -1,31 +1,26 @@
-import os
-import uuid
-import json
 from fastapi import FastAPI, Request
 from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
+import os
+import uuid
+import json
 import redis.asyncio as aioredis  # Async Redis client
-import sys
 
-
-print(f"REDIS_URL from env: {os.getenv('REDIS_URL')}", file=sys.stderr)
-
-
-from client import get_client_response
-from config import REDIS_URL, SESSION_TTL_SECONDS
+from backend.client import get_client_response
+from backend.config import REDIS_URL
 
 # Setup paths
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-TEMPLATES_DIR = os.path.join(BASE_DIR, "templates")
-STATIC_DIR = os.path.join(BASE_DIR, "static")
+TEMPLATES_DIR = os.path.join(os.path.dirname(__file__), "templates")
+STATIC_DIR = os.path.join(os.path.dirname(__file__), "static")
 
 app = FastAPI()
 
-# Async Redis client from URL with auth
+# Redis connection
 redis = aioredis.from_url(REDIS_URL, decode_responses=True)
 
-# Serve static and templates
+# Serve static and HTML
 app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 templates = Jinja2Templates(directory=TEMPLATES_DIR)
 
@@ -69,8 +64,8 @@ async def chat_with_gurubaba(request: Request):
         # Append bot reply to history
         history.append({"role": "assistant", "content": reply})
 
-        # Save updated history with TTL
-        await redis.set(history_key, json.dumps(history), ex=SESSION_TTL_SECONDS)
+        # Save updated history
+        await redis.set(history_key, json.dumps(history), ex=86400)  # TTL = 1 day
 
         return JSONResponse(content={
             "session_id": session_id,
@@ -80,7 +75,7 @@ async def chat_with_gurubaba(request: Request):
     except Exception as e:
         return JSONResponse(status_code=500, content={"error": str(e)})
 
-# Optional: run locally
+# Optional: run directly
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run("main:app", host="0.0.0.0", port=10000, reload=True)
+    uvicorn.run("backend.main:app", host="127.0.0.1", port=8000, reload=True)
