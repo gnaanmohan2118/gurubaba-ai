@@ -22,8 +22,8 @@
 - **Dockerized** services for consistent deployments.  
 - **NGINX reverse proxy + Certbot** for TLS termination and HTTP/2 support.  
 - **Systemd / Supervisor** or container orchestration (ECS/EKS) friendly.  
-- **Deployed on AWS** (EC2 + optional RDS/ElastiCache) with IaC examples for Terraform.  
-- **Observability-ready** (placeholders for Prometheus & Grafana).
+- **Runs on AWS** (EC2 + optional RDS/ElastiCache) with IaC examples for Terraform.  
+- **Ready for observability** with placeholders for Prometheus & Grafana.
 
 ---
 
@@ -318,6 +318,7 @@ App <--> Sanity GROQ API (external)
 [LinkedIn](https://www.linkedin.com/in/gnana-ganesh-m/)
 
 ---
+
 
 
 
