@@ -11,6 +11,9 @@
 ![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
 
 ---
+🔗 **Live Demo:** [View GuruBaba-AI](http://gurubaba-ai.guru/)
+
+---
 
 ##  Highlights (What makes it production-grade)
 - **FastAPI** backend (async first) for powering blazing-fast REST + WebSocket APIs.  
@@ -315,6 +318,7 @@ App <--> Sanity GROQ API (external)
 [LinkedIn](https://www.linkedin.com/in/gnana-ganesh-m/)
 
 ---
+
 
 
 
