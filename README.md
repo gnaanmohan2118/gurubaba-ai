@@ -132,7 +132,7 @@ Open `http://127.0.0.1:8000`.
 
 ---
 
-## 🐳 Docker (local)
+##  Docker (local)
 
 `Dockerfile` (example)
 
@@ -171,7 +171,7 @@ docker-compose up --build
 
 ---
 
-## 🏗️ Production Deployment (AWS EC2 + NGINX + Certbot) — High level
+##  Production Deployment (AWS EC2 + NGINX + Certbot) — High level
 
 ### 1) Provision EC2
 
@@ -295,7 +295,7 @@ sudo systemctl start gurubaba
 
 ---
 
-## 🗺️ Architecture Diagram (brief)
+##  Architecture Diagram (brief)
 
 ```
 [User] --HTTPS--> [NGINX (EC2)] --HTTP--> [FastAPI App Container (127.0.0.1:8000)]
@@ -315,5 +315,6 @@ App <--> Sanity GROQ API (external)
 [LinkedIn](https://www.linkedin.com/in/gnana-ganesh-m/)
 
 ---
+
 
 
