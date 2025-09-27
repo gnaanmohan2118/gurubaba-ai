@@ -39,7 +39,7 @@ async def get_client_response(history: list):
     messages = [SYSTEM_PROMPT] + history
 
     payload = {
-        "model": "meta-llama/llama-4-scout-17b-16e-instruct",
+        "model": #model name,
         "temperature": 2,
         "max_tokens": 8192,
         "top_p": 1,
